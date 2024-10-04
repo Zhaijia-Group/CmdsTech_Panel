@@ -71,7 +71,7 @@ try {
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">工具</a></li>
-          <li><a href="#">编辑器</a></li>
+          <li><a href="workspace.php">编辑器</a></li>
           <li><a href="#">qwerty</a></li>
           <li><a href="#">Card Design</a></li>
         </ul>
@@ -153,7 +153,7 @@ try {
   <section class="home-section">
     <div class="home-content">
       <i class='bx bx-menu' ></i>
-      <span class="text">折叠</span><br />
+      <span class="text" style="display: inline-block; text-align: right; width: 100%; margin-right: 10px;">CmdsTech</span><br />
     </div>
     <div class="cmd_list_container">
       <div>
@@ -161,9 +161,10 @@ try {
         <ul class="work-list">
             <?php foreach ($c_infos as $work): ?>
                 <li class="work-item">
-                    <h2><?php echo htmlspecialchars($work['title']); ?></h2>
+                    <h2><a href="show.php?workId=<?php echo htmlspecialchars($work['id']); ?>"><?php echo htmlspecialchars($work['title']); ?></a></h2>
                     <p>作者: <?php echo htmlspecialchars($work['author']); ?></p>
                     <p>版本: <?php echo htmlspecialchars($work['version']); ?></p>
+                    <p>编号: <?php echo htmlspecialchars($work['id']); ?></p>
                     <p>描述: <?php echo htmlspecialchars($work['description']); ?></p>
                 </li>
             <?php endforeach; ?>

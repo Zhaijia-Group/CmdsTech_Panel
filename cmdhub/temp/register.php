@@ -21,7 +21,7 @@ function isValidPassword($password) {
 }
 
 function isValidCode($code) {
-    return preg_match('/^[\w-]{11}$/', $code);
+    return preg_match('/^[\w-]{3,20}$/', $code); // 假设邀请码是3到20位的字母数字组合
 }
 
 // 注册逻辑
