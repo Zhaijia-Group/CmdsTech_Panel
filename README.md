@@ -31,6 +31,6 @@ CmdsTech面板<br />
  (a? 为什么是temp文件夹? 猜一猜!)<br />
 
 
- 我的临时博客:ourcmds.42web.io
- 关于我们:http://ourcmds.42web.io/2024/10/03/%e5%85%b3%e4%ba%8ecmds-tech/
-QQ群:!(Q群号:372628823)[http://ourcmds.42web.io/wp-content/uploads/2024/10/qrcode_1727941323319-169x300.png]
+ 我的临时博客:ourcmds.42web.io <br />
+ 关于我们:http://ourcmds.42web.io/2024/10/03/%e5%85%b3%e4%ba%8ecmds-tech/<br />
+QQ群:![Q群号:372628823](http://ourcmds.42web.io/wp-content/uploads/2024/10/qrcode_1727941323319-169x300.png)
