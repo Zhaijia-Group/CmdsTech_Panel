@@ -2,10 +2,10 @@
 // db.php
 
 // 数据库连接配置
-$host = '';
-$db = '';
-$user = '';
-$pass = '';
+$host = getenv('DB_HOST') ?: '';
+$db = getenv('DB_NAME') ?: '';
+$user = getenv('DB_USER') ?: '';
+$pass = getenv('DB_PASS') ?: '';
 $charset = 'utf8mb4';
 
 // 建立PDO连接
@@ -19,6 +19,8 @@ $options = [
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
 } catch (\PDOException $e) {
-    throw new \PDOException($e->getMessage(), (int)$e->getCode());
+    // 记录错误到日志文件而不是直接输出
+    error_log($e->getMessage(), 3, '/error_log/error.log'); // 替换为实际日志路径
+    throw new \PDOException('Database connection error.', (int)$e->getCode());
 }
 ?>

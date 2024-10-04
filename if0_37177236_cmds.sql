@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- 主机： sql103.infinityfree.com
--- 生成日期： 2024-10-02 22:45:48
+-- 生成日期： 2024-10-04 04:26:35
 -- 服务器版本： 10.6.19-MariaDB
 -- PHP 版本： 7.2.22
 
@@ -69,6 +69,49 @@ INSERT INTO `codes` (`id`, `code`, `isUsed`) VALUES
 -- --------------------------------------------------------
 
 --
+-- 表的结构 `Command`
+--
+
+CREATE TABLE `Command` (
+  `command_id` int(11) NOT NULL,
+  `group_id` int(11) NOT NULL,
+  `command_text` text NOT NULL,
+  `command_type` varchar(50) DEFAULT NULL,
+  `block_type` varchar(50) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `has_condition` tinyint(1) DEFAULT 0,
+  `description` text DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- 转存表中的数据 `Command`
+--
+
+INSERT INTO `Command` (`command_id`, `group_id`, `command_text`, `command_type`, `block_type`, `is_active`, `has_condition`, `description`) VALUES
+(4, 0, '?', '?', '?', 1, 0, '');
+
+-- --------------------------------------------------------
+
+--
+-- 表的结构 `CommandGroup`
+--
+
+CREATE TABLE `CommandGroup` (
+  `group_id` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `group_name` varchar(255) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- 转存表中的数据 `CommandGroup`
+--
+
+INSERT INTO `CommandGroup` (`group_id`, `user_id`, `group_name`) VALUES
+(1, 3, 'abc');
+
+-- --------------------------------------------------------
+
+--
 -- 表的结构 `users`
 --
 
@@ -101,6 +144,20 @@ ALTER TABLE `cmds`
   ADD PRIMARY KEY (`id`);
 
 --
+-- 表的索引 `Command`
+--
+ALTER TABLE `Command`
+  ADD PRIMARY KEY (`command_id`),
+  ADD KEY `group_id` (`group_id`);
+
+--
+-- 表的索引 `CommandGroup`
+--
+ALTER TABLE `CommandGroup`
+  ADD PRIMARY KEY (`group_id`),
+  ADD KEY `user_id` (`user_id`);
+
+--
 -- 表的索引 `users`
 --
 ALTER TABLE `users`
@@ -121,6 +178,18 @@ ALTER TABLE `cmds`
 --
 ALTER TABLE `codes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- 使用表AUTO_INCREMENT `Command`
+--
+ALTER TABLE `Command`
+  MODIFY `command_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- 使用表AUTO_INCREMENT `CommandGroup`
+--
+ALTER TABLE `CommandGroup`
+  MODIFY `group_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- 使用表AUTO_INCREMENT `users`

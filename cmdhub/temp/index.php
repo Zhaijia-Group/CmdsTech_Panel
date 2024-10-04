@@ -6,14 +6,14 @@ session_start();
 if (!isset($_SESSION['isLogin'])) {
     // 用户未登录，重定向到登录页面
     header('Location: member.php'); // 修改为登录页面
-    exit;
+    exit();
 }
 
 require 'pdo_db.php';
 
 try {
     // 执行查询
-    $stmt = $pdo->query("SELECT * FROM cmds");
+    $stmt = $pdo->query("SELECT * FROM CommandGroup");
     $c_infos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     echo "查询失败: " . $e->getMessage();
@@ -161,11 +161,8 @@ try {
         <ul class="work-list">
             <?php foreach ($c_infos as $work): ?>
                 <li class="work-item">
-                    <h2><a href="show.php?workId=<?php echo htmlspecialchars($work['id']); ?>"><?php echo htmlspecialchars($work['title']); ?></a></h2>
-                    <p>作者: <?php echo htmlspecialchars($work['author']); ?></p>
-                    <p>版本: <?php echo htmlspecialchars($work['version']); ?></p>
-                    <p>编号: <?php echo htmlspecialchars($work['id']); ?></p>
-                    <p>描述: <?php echo htmlspecialchars($work['description']); ?></p>
+                    <h2><a href="show.php?group_id=<?php echo htmlspecialchars($work['group_id']); ?>"><?php echo htmlspecialchars($work['group_name']); ?></a></h2>
+                    <p>编号: <?php echo htmlspecialchars($work['group_id']); ?></p>
                 </li>
             <?php endforeach; ?>
         </ul>

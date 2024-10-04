@@ -1,66 +1,179 @@
 <?php
-//workspace.php
+// add_command.php
+session_start(); // 启动会话
 
+require 'pdo_db.php'; // 引入数据库连接
 
+// 检查用户是否已经登录
+if (!isset($_SESSION['isLogin'])) {
+    // 用户未登录，重定向到登录页面
+    header('Location: member.php'); // 修改为登录页面
+    exit();
+}
 
+// 获取用户的指令组
+$username = $_SESSION['username'];
+$user_id = $_SESSION['user_id'];
+$groups = $pdo->prepare("SELECT * FROM CommandGroup WHERE user_id = :user_id");
+$groups->execute(['user_id' => $user_id]);
+$command_groups = $groups->fetchAll(PDO::FETCH_ASSOC);
 
+// 检查 cmdGroupId 是否存在且不为空
+if (empty($_GET['cmdGroupId'])) {
+    // 如果为空，重定向到另一个页面
+    header("Location: index.php");
+    exit(); // 确保脚本停止执行
+}
 
+// 处理表单提交
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 添加指令
+    if (isset($_POST['add_command'])) {
+        $group_id = $_GET['cmdGroupId'];
+        $command_text = trim($_POST['command_text']);
+        $command_type = trim($_POST['command_type']);
+        $block_type = trim($_POST['block_type']);
+        $is_active = isset($_POST['is_active']) ? 1 : 0; // checkbox
+        $has_condition = isset($_POST['has_condition']) ? 1 : 0; // checkbox
+        $description = trim($_POST['description']);
+
+        if (!empty($command_text)) {
+            try {
+                $stmt = $pdo->prepare("INSERT INTO Command (group_id, command_text, command_type, block_type, is_active, has_condition, description) 
+                                        VALUES (:group_id, :command_text, :command_type, :block_type, :is_active, :has_condition, :description)");
+                $stmt->execute([
+                    'group_id' => $group_id,
+                    'command_text' => $command_text,
+                    'command_type' => $command_type,
+                    'block_type' => $block_type,
+                    'is_active' => $is_active,
+                    'has_condition' => $has_condition,
+                    'description' => $description
+                ]);
+                echo "<div class='alert alert-success'>指令添加成功！</div>";
+            } catch (Exception $e) {
+                echo "<div class='alert alert-danger'>添加失败: " . htmlspecialchars($e->getMessage()) . "</div>";
+            }
+        } else {
+            echo "<div class='alert alert-warning'>指令文本不能为空。</div>";
+        }
+    }
+
+    // 删除指令
+    if (isset($_POST['delete_command'])) {
+        $command_id = $_POST['command_id'];
+        try {
+            $stmt = $pdo->prepare("DELETE FROM Command WHERE command_id = :command_id");
+            $stmt->execute(['command_id' => $command_id]);
+            echo "<div class='alert alert-success'>指令删除成功！</div>";
+        } catch (Exception $e) {
+            echo "<div class='alert alert-danger'>删除失败: " . htmlspecialchars($e->getMessage()) . "</div>";
+        }
+    }
+}
+
+// 获取当前指令组的指令
+//$commands = [];
+//if (isset($_GET['group_id'])) {
+//    $current_group_id = $_GET['group_id'];
+//    $command_query = $pdo->prepare("SELECT * FROM Command WHERE group_id = :group_id");
+//    $command_query->execute(['group_id' => $current_group_id]);
+//    $commands = $command_query->fetchAll(PDO::FETCH_ASSOC);
+//}
+
+// 获取指令组ID
+if (isset($_GET['cmdGroupId'])) {
+    $group_id = $_GET['cmdGroupId'];
+
+    // 获取该指令组的所有指令
+    $commands = $pdo->prepare("SELECT * FROM Command WHERE group_id = :group_id");
+    $commands->execute(['group_id' => $group_id]);
+    $command_list = $commands->fetchAll(PDO::FETCH_ASSOC);
+} else {
+    $command_list = [];
+}
 ?>
+
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>作品信息管理</title>
-    <!-- 引入 Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="html/index/wrokspace/index/styles.css">
+    <title>添加指令</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-    <div class="container-fluid d-flex vh-100 p-3">
-        <div class="card me-3" style="width: 25%;">
-            <div class="card-body">
-                <h5 class="card-title">作品基本信息</h5>
-                <form>
-                    <div class="mb-3">
-                        <label for="projectName" class="form-label">作品名称:</label>
-                        <input type="text" class="form-control" id="projectName" placeholder="输入作品名称" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="projectDetails" class="form-label">作品详情:</label>
-                        <textarea class="form-control" id="projectDetails" placeholder="输入作品详情" required rows="3"></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="minecraftVersion" class="form-label">适用的我的世界版本:</label>
-                        <input type="text" class="form-control" id="minecraftVersion" placeholder="输入适用版本" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="projectVersion" class="form-label">作品版本:</label>
-                        <input type="text" class="form-control" id="projectVersion" placeholder="输入作品版本" required>
-                    </div>
-                    <div class="d-flex justify-content-between">
-                        <button type="button" class="btn btn-success" id="publishButton">发表作品</button>
-                        <button type="button" class="btn btn-warning" id="saveDraftButton">保存草稿</button>
-                        <button type="button" class="btn btn-secondary" id="cancelButton">取消</button>
-                    </div>
-                </form>
+    <div class="container">
+        <h1 class="mt-5">添加指令</h1>
+        <form method="POST" class="mt-3">
+            <div class="mb-3">
+                <label for="command_text" class="form-label">指令文本</label>
+                <textarea name="command_text" id="command_text" class="form-control" required></textarea>
             </div>
-        </div>
 
-        <div class="card flex-fill">
-            <div class="card-body">
-                <h5 class="card-title">内容展示区</h5>
-                <p>在这里展示作品的内容或者生成的指令等信息...</p>
+            <div class="mb-3">
+                <label for="command_type" class="form-label">指令类型</label>
+                <input type="text" name="command_type" id="command_type" class="form-control">
             </div>
-        </div>
 
-        <div class="toolbar">
-            <button id="toggleButton" class="btn btn-primary rounded-circle">+</button>
-        </div>
+            <div class="mb-3">
+                <label for="block_type" class="form-label">命令方块类型</label>
+                <input type="text" name="block_type" id="block_type" class="form-control">
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="is_active" id="is_active" class="form-check-input" checked>
+                <label for="is_active" class="form-check-label">是否激活</label>
+            </div>
+
+            <div class="form-check">
+                <input type="checkbox" name="has_condition" id="has_condition" class="form-check-input">
+                <label for="has_condition" class="form-check-label">是否有条件</label>
+            </div>
+
+            <div class="mb-3">
+                <label for="description" class="form-label">描述</label>
+                <textarea name="description" id="description" class="form-control"></textarea>
+            </div>
+
+            <button type="submit" name="add_command" class="btn btn-primary">添加指令</button>
+        </form>
+
+        <h2 class="mt-5">已添加指令</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>指令ID</th>
+                    <th>指令文本</th>
+                    <th>指令类型</th>
+                    <th>命令方块类型</th>
+                    <th>是否激活</th>
+                    <th>是否有条件</th>
+                    <th>描述</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($command_list as $command): ?>
+                    <tr>
+                        <td><?= htmlspecialchars($command['command_id']) ?></td>
+                        <td><?= htmlspecialchars($command['command_text']) ?></td>
+                        <td><?= htmlspecialchars($command['command_type']) ?></td>
+                        <td><?= htmlspecialchars($command['block_type']) ?></td>
+                        <td><?= $command['is_active'] ? '是' : '否' ?></td>
+                        <td><?= $command['has_condition'] ? '是' : '否' ?></td>
+                        <td><?= htmlspecialchars($command['description']) ?></td>
+                        <td>
+                        <form method="POST" style="display:inline;">
+                            <input type="hidden" name="command_id" value="<?= $command['command_id'] ?>">
+                            <button type="submit" name="delete_command" class="btn btn-danger btn-sm">删除</button>
+                        </form>
+                    </td>
+                    </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
 
-    <!-- 引入 Bootstrap 5 JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="html/index/wrokspace/index/index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
