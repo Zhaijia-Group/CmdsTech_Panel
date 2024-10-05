@@ -1,7 +1,8 @@
 # CmdsTech_Panel
 CmdsTech面板<br />
-(cmds.tech)<br />
-(临时网址:cmds.000.pe)<br />
+https://cmds.tech/<br />
+https://www.cmds.tech/<br />
+
 ## 一款**开源**的脚本托管平台.
 ### 谁都可以有想法,谁都可以成为创作者.
 
