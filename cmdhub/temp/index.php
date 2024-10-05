@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 //index.php
 session_start();
 
@@ -71,7 +71,7 @@ try {
         </div>
         <ul class="sub-menu">
           <li><a class="link_name" href="#">工具</a></li>
-          <li><a href="workspace.php">编辑器</a></li>
+          <li><a href="wp.php">编辑器</a></li>
           <li><a href="#">qwerty</a></li>
           <li><a href="#">Card Design</a></li>
         </ul>
@@ -128,12 +128,12 @@ try {
         </ul>
       </li>
       <li>
-        <a href="#">
+        <a href="settings.php">
           <i class='bx bx-cog' ></i>
           <span class="link_name">设置</span>
         </a>
         <ul class="sub-menu blank">
-          <li><a class="link_name" href="#">设置</a></li>
+          <li><a class="link_name" href="settings.php">设置</a></li>
         </ul>
       </li>
       <li>

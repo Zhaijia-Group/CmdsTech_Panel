@@ -76,7 +76,7 @@ if (isset($_GET['group_id'])) {
 
         <a href="workspace.php?cmdGroupId=<?php echo htmlspecialchars($group_id); ?>" class="btn btn-primary mt-3">返回添加指令</a>
     </div>
-
+    <iframe src="html/index/backbt/backbt.html"></iframe>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
