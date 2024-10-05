@@ -1,4 +1,6 @@
 ﻿<?php
+//login.php
+
 session_start();
 
 // 引入数据库连接

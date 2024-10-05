@@ -1,4 +1,5 @@
 ﻿<?php
+//register.php
 session_start();
 require 'mysqli_db.php'; // 引入数据库连接文件
 

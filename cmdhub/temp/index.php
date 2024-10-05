@@ -1,5 +1,5 @@
 ﻿<?php
-
+//index.php
 session_start();
 
 // 检查用户是否已经登录
@@ -161,7 +161,7 @@ try {
         <ul class="work-list">
             <?php foreach ($c_infos as $work): ?>
                 <li class="work-item">
-                    <h2><a href="show.php?group_id=<?php echo htmlspecialchars($work['group_id']); ?>"><?php echo htmlspecialchars($work['group_name']); ?></a></h2>
+                    <h2><a href="show.php?group_id=<?php echo htmlspecialchars($work['group_name']); ?>"><?php echo htmlspecialchars($work['group_name']); ?></a></h2>
                     <p>编号: <?php echo htmlspecialchars($work['group_id']); ?></p>
                 </li>
             <?php endforeach; ?>

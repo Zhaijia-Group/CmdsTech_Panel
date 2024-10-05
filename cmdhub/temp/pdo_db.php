@@ -1,11 +1,11 @@
 <?php
-// db.php
+//pdo_db.php
 
 // 数据库连接配置
 $host = getenv('DB_HOST') ?: '';
 $db = getenv('DB_NAME') ?: '';
 $user = getenv('DB_USER') ?: '';
-$pass = getenv('DB_PASS') ?: '';
+$pass = getenv('DB_PASS') ?: ''; // 在生产环境中，请将此替换为安全方式存储的密码
 $charset = 'utf8mb4';
 
 // 建立PDO连接

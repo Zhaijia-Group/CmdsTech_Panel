@@ -1,5 +1,5 @@
 <?php
-// show.php
+//show.php
 session_start(); // 启动会话
 
 require 'pdo_db.php'; // 引入数据库连接

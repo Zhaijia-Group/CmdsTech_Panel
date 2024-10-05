@@ -1,5 +1,5 @@
 <?php
-// add_command.php
+// workspace.php
 session_start(); // 启动会话
 
 require 'pdo_db.php'; // 引入数据库连接
@@ -13,7 +13,7 @@ if (!isset($_SESSION['isLogin'])) {
 
 // 获取用户的指令组
 $username = $_SESSION['username'];
-$user_id = $_SESSION['user_id'];
+$user_id = $_SESSION['userId'];
 $groups = $pdo->prepare("SELECT * FROM CommandGroup WHERE user_id = :user_id");
 $groups->execute(['user_id' => $user_id]);
 $command_groups = $groups->fetchAll(PDO::FETCH_ASSOC);
@@ -25,11 +25,25 @@ if (empty($_GET['cmdGroupId'])) {
     exit(); // 确保脚本停止执行
 }
 
+// 获取指令组ID
+$group_id = $_GET['cmdGroupId'];
+
+// 检查用户是否有权限访问该指令组
+$check_group = $pdo->prepare("SELECT * FROM CommandGroup WHERE group_id = :group_id AND user_id = :user_id");
+$check_group->execute(['group_id' => $group_id, 'user_id' => $user_id]);
+$group_info = $check_group->fetch(PDO::FETCH_ASSOC);
+
+if (!$group_info) {
+    // 用户没有访问权限，重定向到另一个页面
+    header("Location: index.php");
+    exit();
+}
+
 // 处理表单提交
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // 添加指令
     if (isset($_POST['add_command'])) {
-        $group_id = $_GET['cmdGroupId'];
+        
         $command_text = trim($_POST['command_text']);
         $command_type = trim($_POST['command_type']);
         $block_type = trim($_POST['block_type']);
@@ -63,8 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['delete_command'])) {
         $command_id = $_POST['command_id'];
         try {
-            $stmt = $pdo->prepare("DELETE FROM Command WHERE command_id = :command_id");
-            $stmt->execute(['command_id' => $command_id]);
+            $stmt = $pdo->prepare("DELETE FROM Command WHERE command_id = :command_id AND group_id = :group_id");
+            $stmt->execute(['command_id' => $command_id, 'group_id' => $group_id]); // 确保只删除该组下的指令
             echo "<div class='alert alert-success'>指令删除成功！</div>";
         } catch (Exception $e) {
             echo "<div class='alert alert-danger'>删除失败: " . htmlspecialchars($e->getMessage()) . "</div>";
@@ -72,27 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// 获取当前指令组的指令
-//$commands = [];
-//if (isset($_GET['group_id'])) {
-//    $current_group_id = $_GET['group_id'];
-//    $command_query = $pdo->prepare("SELECT * FROM Command WHERE group_id = :group_id");
-//    $command_query->execute(['group_id' => $current_group_id]);
-//    $commands = $command_query->fetchAll(PDO::FETCH_ASSOC);
-//}
-
-// 获取指令组ID
-if (isset($_GET['cmdGroupId'])) {
-    $group_id = $_GET['cmdGroupId'];
-
-    // 获取该指令组的所有指令
-    $commands = $pdo->prepare("SELECT * FROM Command WHERE group_id = :group_id");
-    $commands->execute(['group_id' => $group_id]);
-    $command_list = $commands->fetchAll(PDO::FETCH_ASSOC);
-} else {
-    $command_list = [];
-}
+// 获取该指令组的所有指令
+$commands = $pdo->prepare("SELECT * FROM Command WHERE group_id = :group_id");
+$commands->execute(['group_id' => $group_id]);
+$command_list = $commands->fetchAll(PDO::FETCH_ASSOC);
 ?>
+
 
 <!DOCTYPE html>
 <html lang="zh-CN">

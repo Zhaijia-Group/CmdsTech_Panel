@@ -1,5 +1,5 @@
 <?php
-// mysqli_db.php
+//mysqli_db.php
 
 function connectDatabase() {
     $host = '';
