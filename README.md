@@ -18,8 +18,6 @@ https://www.cmds.tech/<br />
 
  数据库用户名 : if0_37177236
 
- 密码 :　zhaishis060095
-
  初始用户用 激活码 : 1234567890b 注册就可以
  ## 目录
  /if0_37177236.sql　　　　cmdhub的数据库文件
@@ -35,3 +33,8 @@ https://www.cmds.tech/<br />
  我的临时博客:ourcmds.42web.io <br />
  关于我们:http://ourcmds.42web.io/2024/10/03/%e5%85%b3%e4%ba%8ecmds-tech/<br />
 QQ群:![Q群号:372628823](http://ourcmds.42web.io/wp-content/uploads/2024/10/qrcode_1727941323319-169x300.png)
+em...我毕竟是一个初中生,住校,所以有什么问题留在博客或者发我email都可以,周末后来了看,有什么好的想法可以发我
+
+QQ:169591476
+
+Email:admin@cmds.tech
